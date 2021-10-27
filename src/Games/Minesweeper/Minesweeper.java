@@ -32,7 +32,7 @@ public class Minesweeper extends JFrame {
 
         EventQueue.invokeLater(() -> {
 
-            var ex = new Minesweeper();
+            Minesweeper ex = new Minesweeper();
             ex.setVisible(true);
         });
     }
