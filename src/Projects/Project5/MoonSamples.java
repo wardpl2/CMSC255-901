@@ -64,8 +64,12 @@ public class MoonSamples {
                 intArray.add(i + 1);
             }
         }
+        int[] returnArray = new int[intArray.size()];
+        for (int i = 0; i < intArray.size(); i++) {
+            returnArray[i] = intArray.get(i);
+        }
 
-        return intArray.stream().mapToInt(i -> i).toArray();
+        return returnArray; /*intArray.stream().mapToInt(i -> i).toArray();*/
     }
 
     /**
