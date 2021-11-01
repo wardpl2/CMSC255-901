@@ -11,16 +11,20 @@ package Projects.Project6;
  **************************/
 public class HouseDevelopmentTest {
     public static void main(String[] args) {
-        House house1 = new House("Preston Ward",1,2500,Bedrooms.ONE_BEDROOM,Baths.ONE,Color.BLUE);
-        House house2 = new House();
-        House house3 = new House("Zach Whitten",1,2000,Bedrooms.TWO_BEDROOM,Baths.ONE,Color.BRICK);
+        House house1 = new House("Caroline Budwell",15,2754.99,Bedrooms.TWO_BEDROOM,Baths.TWO,Color.GREEN);
+        House house2 = new House("Sam Zu",2,2500,Bedrooms.THREE_BEDROOM,Baths.THREE,Color.WHITE);
+        House house3 = new House("Zach Whitten",27,789.45,Bedrooms.STUDIO,Baths.ONE,Color.GRAY);
 
-        Development development1 = new Development("Development1","Richmond, VA",2021,5);
+        Development development1 = new Development("Freeze Zone","North Polar Ice Cap",2023,2);
+        Development development2 = new Development("Crater Field","Korolev crater",100,1);
 
         development1.addHouse(house1);
         development1.addHouse(house2);
-        development1.addHouse(house3);
+
+        development2.addHouse(house3);
 
         System.out.println(development1.toString());
+
+        System.out.println(development2.toString());
     }
 }
