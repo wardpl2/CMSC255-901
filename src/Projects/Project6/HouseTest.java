@@ -232,8 +232,7 @@ public class HouseTest {
         try {
             c.getDeclaredField(aField);
 
-            assertEquals("Your instance variables must NOT be static.", false,
-                    Modifier.isStatic(c.getDeclaredField(aField).getModifiers()));
+            assertFalse("Your instance variables must NOT be static.", Modifier.isStatic(c.getDeclaredField(aField).getModifiers()));
 
         } catch (NoSuchFieldException e) {
             fail("Could not find the " + e.getLocalizedMessage() + " instance variable");

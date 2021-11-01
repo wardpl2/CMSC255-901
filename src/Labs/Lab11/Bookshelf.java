@@ -6,11 +6,19 @@ public class Bookshelf {
     private int size;
     private ArrayList<Book> books;
 
-    //Constructors
+
+    /**
+     * Default Constructor
+     */
     public Bookshelf() {
         size = 2;
         books = new ArrayList<>();
     }
+
+    /**
+     * Parameterized Constructor
+     * @param size int
+     */
     public Bookshelf(int size) {
         this.size = size;
         books = new ArrayList<>();

@@ -18,13 +18,16 @@ public class Book {
         this.author = author;
     }
 
-    //Constructors
+    /**
+     * Default Constructor
+     */
     public Book() {
         title = "Test";
         author = null;
     }
 
     /**
+     * Parameterized Constructor
      * @param title String
      * @param author String
      */
