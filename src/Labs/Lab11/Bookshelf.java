@@ -11,6 +11,7 @@ public class Bookshelf {
      * Default Constructor
      */
     public Bookshelf() {
+        //this(2); <-- Also works
         size = 2;
         books = new ArrayList<>();
     }
