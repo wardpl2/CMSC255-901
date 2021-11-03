@@ -8,14 +8,14 @@ public class SudokuSolver {
         int[][] board = fillBoardToSolve();
 
         System.out.println("\nBEFORE SOLVING:");
-        for (int[] i : board) {//print board before being solved
+        for (int[] i : board) {//print the board before being solved
             System.out.println(Arrays.toString(i));
         }
 
         solver(board);
 
         System.out.println("\nAFTER SOLVING:");
-        for (int[] i : board) {//print board after being solved
+        for (int[] i : board) {//print the board after being solved
             System.out.println(Arrays.toString(i));
         }
     }
