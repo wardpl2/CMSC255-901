@@ -35,6 +35,11 @@ public class SudokuSolver {
         return returnBoard;
     }
 
+    /**
+     * Searches the sudoku board to be solved and returns the coordinates of the first empty space it finds (Searches from top left to bottom right)
+     * @param board int[][] of the sudoku board to be solved
+     * @return coordinates of an empty space in the sudoku board as an int array
+     */
     public static int[] blankPosition(int[][] board) {
         int[] returnArray = new int[2];
 
