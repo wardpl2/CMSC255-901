@@ -16,7 +16,7 @@ public class HouseDevelopmentTest {
         House house3 = new House("Zach Whitten",27,789.45,Bedrooms.STUDIO,Baths.ONE,Color.GRAY);
 
         Development development1 = new Development("Freeze Zone","North Polar Ice Cap",2023,2);
-        Development development2 = new Development("Crater Field","Korolev crater",100,1);
+        Development development2 = new Development("Crater Field","Korolev crater",2072,100);
 
         development1.addHouse(house1);
         development1.addHouse(house2);
