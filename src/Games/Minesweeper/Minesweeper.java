@@ -2,12 +2,8 @@ package Games.Minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 //            subclass          superclass
 public class Minesweeper extends JFrame {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     public Minesweeper() {
         initUI();

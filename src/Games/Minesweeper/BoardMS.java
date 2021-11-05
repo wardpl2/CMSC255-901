@@ -4,12 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
 import java.util.Random;
 
 public class BoardMS extends JPanel {
-    @Serial
-    private static final long serialVersionUID = 1L;
     private final int CELL_SIZE = 15;
 
     private final int COVER_FOR_CELL = 10;
