@@ -1,5 +1,7 @@
 package Games.BattleshipWithGUI;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +12,7 @@ public class Board {
     final Color OCEAN = new Color(44, 44, 115);
     final Color HIT = new Color(189, 37, 37);
     final Color SHIP = new Color(0, 128, 0);
+    final String[] SHIP_NAMES = {"Carrier", "Battleship", "Destroyer", "Submarine", "Patrol Boat"};
     ActionHandler handler = new ActionHandler();
 
 
@@ -50,17 +53,32 @@ public class Board {
         window.add(playerTwoGridPanel);
 
 
-        JPanel shipPanel = new JPanel();
-        shipPanel.setBounds(120,510,250,50);
-        shipPanel.setBackground(Color.GRAY);
-        shipPanel.setLayout(new GridLayout(0,5));
-        shipPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
-        //do something with ship
+        JPanel shipPanel = createShipPanel();
 
         window.add(shipPanel);
 
         window.setVisible(true);
+    }
+
+    @NotNull
+    private JPanel createShipPanel() {
+        JPanel shipPanel = new JPanel();
+        shipPanel.setBounds(15,510,490,50);
+        shipPanel.setBackground(null);
+        shipPanel.setLayout(new BoxLayout(shipPanel,BoxLayout.PAGE_AXIS));
+        shipPanel.setBorder(BorderFactory.createTitledBorder("Ships"));
+
+        JPanel shipPanelShips = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        shipPanel.add(shipPanelShips);
+
+        ButtonGroup shipsBG = new ButtonGroup();
+        JToggleButton[] shipsButton = new JToggleButton[5];
+        for (int i = 0; i < 5; i++) {
+            shipsButton[i] = new JToggleButton(SHIP_NAMES[i]);
+            shipsBG.add(shipsButton[i]);
+            shipPanelShips.add(shipsButton[i]);
+        }
+        return shipPanel;
     }
 
     private void fillGrid(JPanel panel) {
@@ -96,12 +114,6 @@ public class Board {
                 case "OCEAN" -> {
                     JButton button = (JButton) e.getSource();
                     button.setBackground(MISS);
-                }
-                case "SHIPS" -> { // fix this stuff
-                    JButton button = (JButton) e.getSource();
-                    if (button.getActionCommand().equals("SHIPS")) {
-                        button.setBackground(SHIP);
-                    }
                 }
             }
         }
