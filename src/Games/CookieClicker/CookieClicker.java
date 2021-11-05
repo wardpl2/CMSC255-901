@@ -19,6 +19,15 @@ public class CookieClicker {
     Timer timer;
     JTextArea messageText;
     MouseHandler mHandler = new MouseHandler();
+    ImageIcon cookie = new ImageIcon("src/resources/cookie.png");
+    ImageIcon cursor = new ImageIcon("src/resources/cursor.jpg");
+    ImageIcon grandpa = new ImageIcon("src/resources/grandpa.jpg");
+    ImageIcon farm = new ImageIcon("src/resources/farm.jpg");
+    ImageIcon factory = new ImageIcon("src/resources/factory.jpg");
+    ImageIcon cursorCheck = new ImageIcon("src/resources/cursorCheck.jpg");
+    ImageIcon grandpaCheck = new ImageIcon("src/resources/grandpaCheck.jpg");
+    ImageIcon farmCheck = new ImageIcon("src/resources/farmCheck.jpg");
+    ImageIcon factoryCheck = new ImageIcon("src.resources/factoryCheck.jpg");
 
     public static void main(String[] args) {
         new CookieClicker();
@@ -65,12 +74,6 @@ public class CookieClicker {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.getContentPane().setBackground(Color.black);
         window.setLayout(null);
-
-        ImageIcon cookie = new ImageIcon("src/resources/cookie.png");
-        ImageIcon cursor = new ImageIcon("src/resources/cursor.jpg");
-        ImageIcon grandpa = new ImageIcon("src/resources/grandpa.jpg");
-        ImageIcon farm = new ImageIcon("src/resources/farm.jpg");
-        ImageIcon factory = new ImageIcon("src/resources/factory.jpg");
 
 
         JPanel cookiePanel = new JPanel();
@@ -275,11 +278,6 @@ public class CookieClicker {
         public void actionPerformed(ActionEvent event) {
 
             String action = event.getActionCommand();
-            ImageIcon cursorCheck = new ImageIcon("src/resources/cursorCheck.jpg");
-            ImageIcon grandpaCheck = new ImageIcon("src/resources/grandpaCheck.jpg");
-            ImageIcon farmCheck = new ImageIcon("src/resources/farmCheck.jpg");
-            ImageIcon factoryCheck = new ImageIcon("src.resources/factoryCheck.jpg");
-
 
             switch(action) {
                 case "cookie":
