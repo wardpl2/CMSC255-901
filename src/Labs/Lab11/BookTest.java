@@ -51,7 +51,7 @@ public class BookTest {
         Book testBook = new Book();
 
         testVariable("author",testBook,null,"When checking the value of author we");
-        testVariable("title",testBook,"Test","When checking the value of title we");
+        testVariable("title",testBook, "Test","When checking the value of title we");
     }
 
     @Test
