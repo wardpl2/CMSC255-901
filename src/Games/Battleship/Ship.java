@@ -19,6 +19,8 @@ public class Ship {
         return name;
     }
     private void setName(String name) {
+        this.name = name;
+
         if (name.equalsIgnoreCase("Carrier")) {
             setSize(5);
         }
@@ -33,6 +35,8 @@ public class Ship {
         }
         else if (name.equalsIgnoreCase("Patrol Boat")) {
             setSize(2);
+        } else {
+            throw new IllegalStateException();
         }
 
 
