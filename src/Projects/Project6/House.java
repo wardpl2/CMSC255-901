@@ -1,5 +1,14 @@
 package Projects.Project6;
 
+/***************************
+ * House
+ ***************************
+ *<p>This program has information on houses on Mars and has a specialized toString method that shows a houses information</p>
+ ***************************
+ * @author Preston Ward
+ * @version 11/5/2021
+ * CMSC 255-901
+ **************************/
 public class House {
     private String owner;
     private int lotNumber;

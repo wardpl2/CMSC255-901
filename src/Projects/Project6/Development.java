@@ -2,6 +2,15 @@ package Projects.Project6;
 
 import java.util.ArrayList;
 
+/***************************
+ * Development
+ ***************************
+ *<p>This program has information on developments on Mars and has a specialized toString method that shows its, and the houses it contains', information</p>
+ ***************************
+ * @author Preston Ward
+ * @version 11/5/2021
+ * CMSC 255-901
+ **************************/
 public class Development {
     private String name;
     private String location;

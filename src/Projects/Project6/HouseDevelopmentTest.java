@@ -6,7 +6,7 @@ package Projects.Project6;
  *<p>This program uses 2 classes (House and Development) and 3 enums (Bedrooms, Baths, Color) to give information about houses and developments on Mars</p>
  ***************************
  * @author Preston Ward
- * @version 11/11/2021
+ * @version 11/5/2021
  * CMSC 255-901
  **************************/
 public class HouseDevelopmentTest {
