@@ -18,7 +18,34 @@ public class SudokuSolver {
         for (int[] i : board) {//print the board after being solved
             System.out.println(Arrays.toString(i));
         }
+//        new SudokuSolver();
     }
+
+//    public SudokuSolver() {
+//        createUI();
+//    }
+
+//    private void createUI() {
+//        JFrame window = new JFrame();
+//        window.setSize(1000, 500);
+//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        window.getContentPane().setBackground(new Color(214, 219, 222));
+//        window.setLayout(null);
+//
+//        JPanel coordsPanel = new JPanel();
+//        coordsPanel.setBounds(100,100,200,100);
+//        coordsPanel.setBackground(Color.black);
+//        coordsPanel.setLayout(new GridLayout(1,2));
+//        window.add(coordsPanel);
+//
+//        JLabel xCoordLabel = new JLabel("X: " /*xcoord*/);
+//        xCoordLabel.setForeground(Color.white);
+//        xCoordLabel.setFont(new Font("Helvetica", Font.PLAIN, 15));
+//        coordsPanel.add(xCoordLabel);
+//
+//        window.setVisible(true);
+//
+//    }
 
     /**
      * Fills a sudoku board by asking the user to input the numbers on the board using 0s for empty spaces
@@ -58,6 +85,12 @@ public class SudokuSolver {
         return returnArray;
     }
 
+    /**
+     * @param board int[][] The sudoku board to be solved
+     * @param row int The row to search through to see if num is present
+     * @param num int The num to search for
+     * @return boolean Whether or not num is in the row in board
+     */
     public static boolean usedInRow(int[][] board, int row, int num) {
         for (int i = 0; i < board.length; i++) {
             if (board[row][i] == num) {
@@ -66,6 +99,13 @@ public class SudokuSolver {
         }
         return false;
     }
+
+    /**
+     * @param board int[][] The sudoku board to be solved
+     * @param col int The column to search through to se if num is present
+     * @param num int The num to search for
+     * @return boolean Whether or not num is in the col in board
+     */
     public static boolean usedInCol(int[][] board, int col, int num) {
         for (int i = 0; i < board.length; i++) {
             if (board[i][col] == num) {
@@ -74,6 +114,14 @@ public class SudokuSolver {
         }
         return false;
     }
+
+    /**
+     * @param board int[][] The sudoku board to be solved
+     * @param row1Start int The startRow that will search it and the 2 rows associated with the grid
+     * @param col1Start int The startCol that will search it and the 2 columns associated with the grid
+     * @param num int The num to search for in the current 3x3 grid
+     * @return boolean Whether or not num is in the 3x3 grid in board
+     */
     public static boolean usedInBox(int[][] board, int row1Start, int col1Start, int num) {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -85,10 +133,21 @@ public class SudokuSolver {
         return false;
     }
 
+    /**
+     * @param board int[][] The sudoku board to be solved
+     * @param row int The row to be searched
+     * @param col int The column to be searched
+     * @param num int The num that is being searched for
+     * @return boolean Whether or not num is in the current row, the current column, and the current 3x3 grid
+     */
     public static boolean isSafe(int[][] board, int row, int col, int num) {
         return (!usedInRow(board,row,num) && !usedInCol(board,col,num) && !usedInBox(board, row - row % 3, col - col % 3, num));
     }
 
+    /**
+     * @param board int[][] The sudoku board to be solved
+     * @return boolean Whether or not the board has been solved
+     */
     public static boolean solver(int[][] board) {
         int[] returnArray = blankPosition(board);
         if (returnArray[0] == -1) {
@@ -111,3 +170,4 @@ public class SudokuSolver {
         return false;
     }
 }
+
