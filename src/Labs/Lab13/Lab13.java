@@ -20,7 +20,7 @@ public class Lab13 {
             ArrayList<Team> teamArrayList = new ArrayList<>();
             while (input.hasNextLine()) {
                 String[] temp = input.nextLine().split(",");
-                teamArrayList.add(new Team(temp[0],Integer.parseInt(temp[1]),Integer.parseInt(temp[2])));
+                teamArrayList.add(new Team(temp[0],Integer.parseInt(temp[1]),Double.parseDouble(temp[2])));
             }
             //find maxGoalsScored
             String maxName = "";
@@ -53,7 +53,9 @@ public class Lab13 {
             average = sum / teamArrayList.size();
             output.printf("Average shots per game: %.3f", average);
 
-        } catch (FileNotFoundException e) {
+            output.close();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -3,15 +3,15 @@ package Labs.Lab13;
 public class Team {
     private String name;
     private int numGoals;
-    private int numShots;
+    private double numShots;//ask if this should be int or double
 
     public Team() {
         name = "";
         numGoals = 0;
-        numShots = 0;
+        numShots = 0.0;
     }
 
-    public Team(String name, int numGoals, int numShots) {
+    public Team(String name, int numGoals, double numShots) {
         this.name = name;
         this.numGoals = numGoals;
         this.numShots = numShots;
@@ -30,10 +30,10 @@ public class Team {
     public void setNumGoals(int numGoals) {
         this.numGoals = numGoals;
     }
-    public int getNumShots() {
+    public double getNumShots() {
         return numShots;
     }
-    public void setNumShots(int numShots) {
+    public void setNumShots(double numShots) {
         this.numShots = numShots;
     }
 }
