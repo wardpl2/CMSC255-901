@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Board extends JFrame implements ActionListener{
     final Color MISS = new Color(77, 147, 218, 255);
@@ -17,6 +18,7 @@ public class Board extends JFrame implements ActionListener{
     char currentShip = ' ';
     public JPanel playerOneGridPanel;
     public JPanel playerTwoGridPanel;
+    ArrayList<String[]> shipsArrayList = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -120,6 +122,13 @@ public class Board extends JFrame implements ActionListener{
         }
     }
 
+    private void setSolutionGrid(JPanel panel, ArrayList<String[]> shipCoords) {
+        for (String[] S : shipCoords) {
+            panel.getComponentAt(Integer.parseInt(S[1]),Integer.parseInt(S[2])).setBackground(SHIP);
+            panel.getComponentAt(Integer.parseInt(S[1]),Integer.parseInt(S[2])).setName(S[0]);
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -147,11 +156,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+45).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*2)).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*3)).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*4)).setBackground(SHIP);
+                            for (int i = 0; i < 5; i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x, y+(45*i)).setName("Carrier");
+                                temp[0] = "Carrier";
+                                temp[1] = String.valueOf(x);
+                                temp[2] = String.valueOf(y+(45*i));
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     } else if (horizontal) {
@@ -165,11 +178,16 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+47,y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*2),y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*3),y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*4),y).setBackground(SHIP);
+//                            jButton.setBackground(SHIP);
+                            for (int i = 0;i<5;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Carrier");
+                                temp[0] = "Carrier";
+                                temp[1] = String.valueOf(x+(47*i));
+                                temp[2]= String.valueOf(y);
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     }
@@ -185,10 +203,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+45).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*2)).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*3)).setBackground(SHIP);
+                            for (int i = 0; i < 4; i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setName("Battleship");
+                                temp[0] = "Battleship";
+                                temp[1] = String.valueOf(x);
+                                temp[2]= String.valueOf(y+(45*i));
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     } else if (horizontal) {
@@ -201,10 +224,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+47,y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*2),y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*3),y).setBackground(SHIP);
+                            for (int i = 0;i<4;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Battleship");
+                                temp[0] = "Battleship";
+                                temp[1] = String.valueOf(x+(47*i));
+                                temp[2]= String.valueOf(y);
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     }
@@ -219,9 +247,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+45).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*2)).setBackground(SHIP);
+                            for (int i=0;i<3;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setName("Destroyer");
+                                temp[0] = "Destroyer";
+                                temp[1] = String.valueOf(x);
+                                temp[2]= String.valueOf(y+(45*i));
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     } else if (horizontal) {
@@ -233,9 +267,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+47,y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*2),y).setBackground(SHIP);
+                            for (int i=0;i<3;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Battleship");
+                                temp[0] = "Battleship";
+                                temp[1] = String.valueOf(x+(47*i));
+                                temp[2]= String.valueOf(y);
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     }
@@ -250,9 +290,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+45).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+(45*2)).setBackground(SHIP);
+                            for (int i=0;i<3;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setName("Submarine");
+                                temp[0] = "Submarine";
+                                temp[1] = String.valueOf(x);
+                                temp[2]= String.valueOf(y+(45*i));
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     } else if (horizontal) {
@@ -264,9 +310,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+47,y).setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+(47*2),y).setBackground(SHIP);
+                            for (int i=0;i<3;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Submarine");
+                                temp[0] = "Submarine";
+                                temp[1] = String.valueOf(x+(47*i));
+                                temp[2]= String.valueOf(y);
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     }
@@ -280,8 +332,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x,y+45).setBackground(SHIP);
+                            for (int i=0;i<2;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x,y+(45*i)).setName("Patrol Boat");
+                                temp[0] = "Patrol Boat";
+                                temp[1] = String.valueOf(x);
+                                temp[2]= String.valueOf(y+(45*i));
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     } else if (horizontal) {
@@ -292,8 +351,15 @@ public class Board extends JFrame implements ActionListener{
                         ) {
                             //don't place ship
                         } else {
-                            jButton.setBackground(SHIP);
-                            playerOneGridPanel.getComponentAt(x+47,y).setBackground(SHIP);
+                            for (int i=0;i<2;i++) {
+                                String[] temp = new String[3];
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Patrol Boat");
+                                temp[0] = "Patrol Boat";
+                                temp[1] = String.valueOf(x+(47*i));
+                                temp[2]= String.valueOf(y);
+                                shipsArrayList.add(temp);
+                            }
                             currentShip = ' ';
                         }
                     }
