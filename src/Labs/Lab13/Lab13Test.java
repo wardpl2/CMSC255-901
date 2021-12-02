@@ -26,7 +26,7 @@ public class Lab13Test {
     //Lab13 Tests
 
     @Test
-    public void fullProgramTest() {
+    public void fullProgramTest() throws FileNotFoundException {
         File outputFile = generateOutputFile();
         Lab13.processFile(generateInputFile(),outputFile);
 

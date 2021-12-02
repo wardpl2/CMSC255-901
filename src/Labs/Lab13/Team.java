@@ -3,7 +3,7 @@ package Labs.Lab13;
 public class Team {
     private String name;
     private int numGoals;
-    private double numShots;//ask if this should be int or double
+    private double numShots;
 
     public Team() {
         name = "";

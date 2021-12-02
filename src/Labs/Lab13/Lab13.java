@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Lab13 {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         File input = new File(args[0]);
         File output = new File(args[1]);
-        processFile(input, output);
+        try {
+            processFile(input, output);
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void processFile(File inputFile, File outputFile) {
-        try {
+    public static void processFile(File inputFile, File outputFile) throws FileNotFoundException{
             Scanner input = new Scanner(inputFile);
             PrintWriter output = new PrintWriter(outputFile);
             ArrayList<Team> teamArrayList = new ArrayList<>();
@@ -54,9 +58,5 @@ public class Lab13 {
             output.printf("Average shots per game: %.3f", average);
 
             output.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
