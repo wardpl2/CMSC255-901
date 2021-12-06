@@ -4,9 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 
-public class Board extends JFrame implements ActionListener{
+public class BoardPlayer1 extends JFrame implements ActionListener{
     final Color MISS = new Color(77, 147, 218, 255);
     final Color OCEAN = new Color(44, 44, 115);
     final Color HIT = new Color(189, 37, 37);
@@ -19,16 +22,22 @@ public class Board extends JFrame implements ActionListener{
     public JPanel playerOneGridPanel;
     public JPanel playerTwoGridPanel;
     ArrayList<String[]> shipsArrayList = new ArrayList<>();
+    static String[][] shipCoords = new String[10][10];
+    Timer timer;
+    int numShipsPlaced;
 
 
     public static void main(String[] args) {
-        new Board();
+        new BoardPlayer1();
     }
 
-    public Board() {
+    public BoardPlayer1() {
         createUI();
     }
 
+    /**
+     * Self-explanatory
+     */
     private void createUI() {
         JFrame window = new JFrame();
         window.setSize(1155,625);
@@ -61,10 +70,35 @@ public class Board extends JFrame implements ActionListener{
         JPanel shipPanel = createShipPanel();
 
         window.add(shipPanel);
+        setTimer();
+
 
         window.setVisible(true);
     }
 
+    public void setTimer() {
+        timer = new Timer(1000, e -> {
+            System.out.println("timer went off");
+            if (numShipsPlaced == 5) {
+                try {
+                    Socket s = new Socket("localhost",1234);
+                    ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+                    oos.writeObject(shipsArrayList);
+                    oos.close();
+                    s.close();
+                    timer.stop();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        timer.start();
+    }
+
+    /**
+     * Creates a {@link JPanel} of 5 {@link JToggleButton}s to select which ship the user will place
+     * @return a {@link JPanel}
+     */
     private JPanel createShipPanel() {
         JPanel shipPanel = new JPanel();
         shipPanel.setBounds(15,510,490,50);
@@ -87,25 +121,36 @@ public class Board extends JFrame implements ActionListener{
         return shipPanel;
     }
 
+    /**
+     * Fills an empty 11x11 {@link JPanel} set to a {@link GridLayout} with {@link JButton}s
+     * @param panel A player's {@link JPanel}
+     */
     private void fillGrid(JPanel panel) {
         panel.add(new JButton("_"));
         for (int i = 1; i <= 10; i++) {
             panel.add(new JButton(String.valueOf(i)));
         }
+        int i = 0;
         for (char c = 'A'; c <= 'J'; c++) {
             panel.add(new JButton(String.valueOf(c)));
-            addOcean(panel);
+            addOcean(panel,i);
+            i++;
         }
         addOceanToGrid();
     }
 
-    private void addOcean(JPanel panel) {
-        for (int i = 1; i <= 10; i++) {
+    /**
+     * Adds {@link JButton}s with their background set to OCEAN and adds an {@link ActionListener} with the ActionCommand set to "OCEAN" to the given panel
+     * @param panel A player's {@link JPanel}
+     */
+    private void addOcean(JPanel panel, int row) {
+        for (int i = 0; i < 10; i++) {
             JButton button = new JButton();
             button.setBackground(OCEAN);
             button.addActionListener(this);
             button.setActionCommand("OCEAN");
             panel.add(button);
+            shipCoords[row][i] = "OCEAN";
         }
     }
 
@@ -118,7 +163,6 @@ public class Board extends JFrame implements ActionListener{
                 button.setActionCommand("OCEAN");
                 buttonGrid[i][j] = button;
             }
-
         }
     }
 
@@ -136,7 +180,6 @@ public class Board extends JFrame implements ActionListener{
         String[] options = {"Vertical", "Horizontal"};
         char[] shipsArray = {'C', 'B', 'D', 'S', 'P'};
 
-
         switch (action) {
             case "OCEAN" -> {
                 JButton jButton = (JButton) e.getSource();
@@ -147,15 +190,13 @@ public class Board extends JFrame implements ActionListener{
                 if (currentShip == 'C') {
                     if (vertical) {
                         if (
-                                y+(45*4) > 452 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+45).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*2)).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*3)).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*4)).getBackground() == SHIP
+                                y + (45 * 4) <= 452 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + 45).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 2)).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 3)).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 4)).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i = 0; i < 5; i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
@@ -164,20 +205,23 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x);
                                 temp[2] = String.valueOf(y+(45*i));
                                 shipsArrayList.add(temp);
+                                int newX = (x/47) - 1;
+                                int newY = ((y+(45*i))/45) - 1;
+                                shipCoords[newX][newY] = "CARRIER";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
+
                     } else if (horizontal) {
                         if (
-                                x+(47*4) > 471 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+47,y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*2),y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*3),y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*4),y).getBackground() == SHIP
+                                x + (47 * 4) <= 471 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + 47, y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 2), y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 3), y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 4), y).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
 //                            jButton.setBackground(SHIP);
                             for (int i = 0;i<5;i++) {
                                 String[] temp = new String[3];
@@ -187,22 +231,25 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
                                 shipsArrayList.add(temp);
+                                int newX = ((x+(47*i))/47) - 1;
+                                int newY = (y/45) - 1;
+                                shipCoords[newX][newY] = "CARRIER";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
+
                     }
                 }
                 else if (currentShip == 'B') {
                     if (vertical) {
                         if (
-                                y+(45*3) > 452 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+45).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*2)).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*3)).getBackground() == SHIP
+                                y + (45 * 3) <= 452 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + 45).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 2)).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 3)).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i = 0; i < 4; i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
@@ -211,19 +258,21 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
                                 shipsArrayList.add(temp);
+                                int newX = (x/47) - 1;
+                                int newY = ((y+(45*i))/45) - 1;
+                                shipCoords[newX][newY] = "BATTLESHIP";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     } else if (horizontal) {
                         if (
-                                x+(47*3) > 471 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+47,y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*2),y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*3),y).getBackground() == SHIP
+                                x + (47 * 3) <= 471 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + 47, y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 2), y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 3), y).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i = 0;i<4;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
@@ -232,21 +281,23 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
                                 shipsArrayList.add(temp);
+                                int newX = ((x+(47*i))/47) - 1;
+                                int newY = (y/45) - 1;
+                                shipCoords[newX][newY] = "BATTLESHIP";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     }
                 }
                 else if (currentShip == 'D') {
                     if (vertical) {
                         if (
-                                y+(45*2) > 452 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+45).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*2)).getBackground() == SHIP
+                                y + (45 * 2) <= 452 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + 45).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 2)).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<3;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
@@ -255,41 +306,45 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
                                 shipsArrayList.add(temp);
+                                int newX = (x/47) - 1;
+                                int newY = ((y+(45*i))/45) - 1;
+                                shipCoords[newX][newY] = "DESTROYER";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     } else if (horizontal) {
                         if (
-                                x+(47*2) > 471 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+47,y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*2),y).getBackground() == SHIP
+                                x + (47 * 2) <= 471 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + 47, y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 2), y).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<3;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
-                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Battleship");
-                                temp[0] = "Battleship";
+                                playerOneGridPanel.getComponentAt(x+(47*i),y).setName("Destroyer");
+                                temp[0] = "Destroyer";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
                                 shipsArrayList.add(temp);
+                                int newX = ((x+(47*i))/47) - 1;
+                                int newY = (y/45) - 1;
+                                shipCoords[newX][newY] = "DESTROYER";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     }
                 }
                 else if (currentShip == 'S') {
                     if (vertical) {
                         if (
-                                y+(45*2) > 452 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+45).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+(45*2)).getBackground() == SHIP
+                                y + (45 * 2) <= 452 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + 45).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + (45 * 2)).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<3;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
@@ -298,18 +353,20 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
                                 shipsArrayList.add(temp);
+                                int newX = (x/47) - 1;
+                                int newY = ((y+(45*i))/45) - 1;
+                                shipCoords[newX][newY] = "SUBMARINE";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     } else if (horizontal) {
                         if (
-                                x+(47*2) > 471 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+47,y).getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+(47*2),y).getBackground() == SHIP
+                                x + (47 * 2) <= 471 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + 47, y).getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + (47 * 2), y).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<3;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
@@ -318,20 +375,22 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
                                 shipsArrayList.add(temp);
+                                int newX = ((x+(47*i))/47) - 1;
+                                int newY = (y/45) - 1;
+                                shipCoords[newX][newY] = "SUBMARINE";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     }
                 }
                 else if (currentShip == 'P') {
                     if (vertical) {
                         if (
-                                y+45 > 452 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x,y+45).getBackground() == SHIP
+                                y + 45 <= 452 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x, y + 45).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<2;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x,y+(45*i)).setBackground(SHIP);
@@ -340,17 +399,19 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
                                 shipsArrayList.add(temp);
+                                int newX = (x/47) - 1;
+                                int newY = ((y+(45*i))/45) - 1;
+                                shipCoords[newX][newY] = "PATROL_BOAT";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     } else if (horizontal) {
                         if (
-                                x+47 > 471 ||
-                                jButton.getBackground() == SHIP ||
-                                playerOneGridPanel.getComponentAt(x+47,y).getBackground() == SHIP
+                                x + 47 <= 471 &&
+                                        jButton.getBackground() != SHIP &&
+                                        playerOneGridPanel.getComponentAt(x + 47, y).getBackground() != SHIP
                         ) {
-                            //don't place ship
-                        } else {
                             for (int i=0;i<2;i++) {
                                 String[] temp = new String[3];
                                 playerOneGridPanel.getComponentAt(x+(47*i),y).setBackground(SHIP);
@@ -359,75 +420,57 @@ public class Board extends JFrame implements ActionListener{
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
                                 shipsArrayList.add(temp);
+                                int newX = ((x+(47*i))/47) - 1;
+                                int newY = (y/45) - 1;
+                                shipCoords[newX][newY] = "PATROL_BOAT";
                             }
                             currentShip = ' ';
+                            numShipsPlaced++;
                         }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null,"Select a ship first","Warning",JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "SHIP" -> {
                 JToggleButton jToggleButton = (JToggleButton) e.getSource();
                 if (jToggleButton.getText().equalsIgnoreCase("Carrier")) {
-                    int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                    if (n == 0) {
-                        horizontal = false;
-                        vertical = true;
-                    } else {
-                        vertical = false;
-                        horizontal = true;
-                    }
+                    VorH(options);
                     currentShip = shipsArray[0];
                     jToggleButton.setEnabled(false);
                 }
                 else if (jToggleButton.getText().equalsIgnoreCase("Battleship")) {
-                    int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                    if (n == 0) {
-                        horizontal = false;
-                        vertical = true;
-                    } else {
-                        vertical = false;
-                        horizontal = true;
-                    }
+                    VorH(options);
                     currentShip = shipsArray[1];
                     jToggleButton.setEnabled(false);
                 }
                 else if (jToggleButton.getText().equalsIgnoreCase("Destroyer")) {
-                    int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                    if (n == 0) {
-                        horizontal = false;
-                        vertical = true;
-                    } else {
-                        vertical = false;
-                        horizontal = true;
-                    }
+                    VorH(options);
                     currentShip = shipsArray[2];
                     jToggleButton.setEnabled(false);
                 }
                 else if (jToggleButton.getText().equalsIgnoreCase("Submarine")) {
-                    int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                    if (n == 0) {
-                        horizontal = false;
-                        vertical = true;
-                    } else {
-                        vertical = false;
-                        horizontal = true;
-                    }
+                    VorH(options);
                     currentShip = shipsArray[3];
                     jToggleButton.setEnabled(false);
                 }
                 else if (jToggleButton.getText().equalsIgnoreCase("Patrol Boat")) {
-                    int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                    if (n == 0) {
-                        horizontal = false;
-                        vertical = true;
-                    } else {
-                        vertical = false;
-                        horizontal = true;
-                    }
+                    VorH(options);
                     currentShip = shipsArray[4];
                     jToggleButton.setEnabled(false);
                 }
             }
+        }
+    }
+
+    private void VorH(String[] options) {
+        int n = JOptionPane.showOptionDialog(new JFrame(),"Do you want this ship to be placed horizontally or vertically?","Placement",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+        if (n == 0) {
+            horizontal = false;
+            vertical = true;
+        } else {
+            vertical = false;
+            horizontal = true;
         }
     }
 }
