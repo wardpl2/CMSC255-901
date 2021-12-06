@@ -1,6 +1,7 @@
 package Games.BattleshipWithGUI;
 
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,18 +16,26 @@ public class SimpleServer {
             Socket s2 = ss.accept(); //client2
             ObjectInputStream ois1 = new ObjectInputStream(s1.getInputStream()); //read a general object sent from client1
             ObjectInputStream ois2 = new ObjectInputStream(s2.getInputStream()); //read a general object sent from client2
-            //create the ArrayList of String arrays from client1
-            ArrayList<String[]> al1 = (ArrayList<String[]>) ois1.readObject();
+            ObjectOutputStream oos1 = new ObjectOutputStream(s1.getOutputStream());
+            ObjectOutputStream oos2 = new ObjectOutputStream(s2.getOutputStream());
+            ArrayList<String[]> al1 = (ArrayList<String[]>) ois1.readObject(); //create the ArrayList of String arrays from client1
+            ArrayList<String[]> al2 = (ArrayList<String[]>) ois2.readObject(); //create the ArrayList of String arrays from client2
+            oos1.writeObject(al2);
+            oos2.writeObject(al1);
+            //print client1 ArrayList
             for (String[] S : al1) {
                 System.out.println(Arrays.toString(S));
             }
             System.out.println("\n"); // separation
-            //create the ArrayList of String arrays from client2
-            ArrayList<String[]> al2 = (ArrayList<String[]>) ois2.readObject();
+            //print client2 ArrayList
             for (String[] S : al2) {
                 System.out.println(Arrays.toString(S));
             }
             //close everything
+            ois1.close();
+            ois2.close();
+            oos1.close();
+            oos2.close();
             s1.close();
             s2.close();
             ss.close();

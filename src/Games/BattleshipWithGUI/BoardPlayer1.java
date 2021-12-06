@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,7 +21,8 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
     char currentShip = ' ';
     public JPanel playerOneGridPanel;
     public JPanel playerTwoGridPanel;
-    ArrayList<String[]> shipsArrayList = new ArrayList<>();
+    static ArrayList<String[]> p1SolutionGrid = new ArrayList<>();
+    static ArrayList<String[]> p2SolutionGrid = new ArrayList<>();
     static String[][] shipCoords = new String[10][10];
     Timer timer;
     int numShipsPlaced;
@@ -83,11 +84,19 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                 try {
                     Socket s = new Socket("localhost",1234);
                     ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-                    oos.writeObject(shipsArrayList);
+                    ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+                    oos.writeObject(p1SolutionGrid);
+                    p2SolutionGrid = (ArrayList<String[]>) ois.readObject();
                     oos.close();
+                    ois.close();
                     s.close();
                     timer.stop();
-                } catch (IOException ex) {
+                    p2SolutionGrid.forEach(System.out::println);
+//                    for (String[] S : p2SolutionGrid) {
+//                        System.out.println(Arrays.toString(S));
+//                    }
+                    setSolutionGrid(playerTwoGridPanel,p2SolutionGrid);
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -204,7 +213,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Carrier";
                                 temp[1] = String.valueOf(x);
                                 temp[2] = String.valueOf(y+(45*i));
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = (x/47) - 1;
                                 int newY = ((y+(45*i))/45) - 1;
                                 shipCoords[newX][newY] = "CARRIER";
@@ -230,7 +239,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Carrier";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = ((x+(47*i))/47) - 1;
                                 int newY = (y/45) - 1;
                                 shipCoords[newX][newY] = "CARRIER";
@@ -257,7 +266,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Battleship";
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = (x/47) - 1;
                                 int newY = ((y+(45*i))/45) - 1;
                                 shipCoords[newX][newY] = "BATTLESHIP";
@@ -280,7 +289,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Battleship";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = ((x+(47*i))/47) - 1;
                                 int newY = (y/45) - 1;
                                 shipCoords[newX][newY] = "BATTLESHIP";
@@ -305,7 +314,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Destroyer";
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = (x/47) - 1;
                                 int newY = ((y+(45*i))/45) - 1;
                                 shipCoords[newX][newY] = "DESTROYER";
@@ -327,7 +336,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Destroyer";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = ((x+(47*i))/47) - 1;
                                 int newY = (y/45) - 1;
                                 shipCoords[newX][newY] = "DESTROYER";
@@ -352,7 +361,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Submarine";
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = (x/47) - 1;
                                 int newY = ((y+(45*i))/45) - 1;
                                 shipCoords[newX][newY] = "SUBMARINE";
@@ -374,7 +383,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Submarine";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = ((x+(47*i))/47) - 1;
                                 int newY = (y/45) - 1;
                                 shipCoords[newX][newY] = "SUBMARINE";
@@ -398,7 +407,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Patrol Boat";
                                 temp[1] = String.valueOf(x);
                                 temp[2]= String.valueOf(y+(45*i));
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = (x/47) - 1;
                                 int newY = ((y+(45*i))/45) - 1;
                                 shipCoords[newX][newY] = "PATROL_BOAT";
@@ -419,7 +428,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                                 temp[0] = "Patrol Boat";
                                 temp[1] = String.valueOf(x+(47*i));
                                 temp[2]= String.valueOf(y);
-                                shipsArrayList.add(temp);
+                                p1SolutionGrid.add(temp);
                                 int newX = ((x+(47*i))/47) - 1;
                                 int newY = (y/45) - 1;
                                 shipCoords[newX][newY] = "PATROL_BOAT";
