@@ -26,7 +26,7 @@ public class MoonStudy {
         ArrayList<String> dataLineByLine = new ArrayList<>();
 
         //try to initialize input and output files and catch if the filenames
-        //can't be found and separate the input data line-by-line
+        //can't be found and separates the input data line-by-line
         try {
             inFile = new File(args[0]);
             outFile = new File(args[1]);
@@ -44,25 +44,30 @@ public class MoonStudy {
         double meanRadius = findMean(moons,MoonAttributes.RADIUS);
         double highestDensity = findHighValue(moons,MoonAttributes.DENSITY);
         Moon closestMoonToMeanRadius = findMeanMoon(moons,MoonAttributes.RADIUS,meanRadius);
-        String lowestMoons = "";
-        for (Moon M :findLowestMoons(moons,meanRadius,MoonAttributes.RADIUS)) {
-             lowestMoons += (M.toString() + " ");
-        }
+//        String lowestMoons = "";
+//        for (Moon M :findLowestMoons(moons,meanRadius,MoonAttributes.RADIUS)) {
+//             lowestMoons += (M.toString() + " ");
+//        }
 
         //try to output to file and catch if output file can't be found
         try {
             PrintWriter out = new PrintWriter(outFile);
             System.out.println("Output file correct");
-            out.printf("The mean of radii is: %.2f", meanRadius);
-            out.println();
-            out.println();
-            out.printf("The highest density value is: %.2f", highestDensity);
-            out.println();
-            out.println();
-            out.println("The moon closest to the mean is: " + closestMoonToMeanRadius);
-            out.println();
-            out.println("The moons below the mean value of radii are: " + lowestMoons);
-            out.println();
+//            out.printf("The mean of radii is: %.2f", meanRadius);
+//            out.println();
+//            out.println();
+//            out.printf("The highest density value is: %.2f", highestDensity);
+//            out.println();
+//            out.println();
+//            out.println("The moon closest to the mean is: " + closestMoonToMeanRadius);
+//            out.println();
+//            out.println("The moons below the mean value of radii are: " + lowestMoons);
+//            out.println();
+
+            outputToFile("The mean of radii is: ",meanRadius,out);
+            outputToFile("The highest density value is: ",highestDensity,out);
+            outputToFile("The moon closest to the mean is: ",closestMoonToMeanRadius,out);
+            outputToFile("The moons below the mean value of radii are: ",findLowestMoons(moons,meanRadius,MoonAttributes.RADIUS),out);
 
             out.close();
         } catch (FileNotFoundException e) {
@@ -86,10 +91,11 @@ public class MoonStudy {
     }
 
     /**
-     * Takes an {@link ArrayList} of Strings and takes each CSV and uses it to make a {@link Moon} object which is then added to an {@link ArrayList} of {@link Moon} objects.
+     * Takes an {@link ArrayList} of Strings and takes each CSV and uses it to make
+     * a {@link Moon} object which is then added to an {@link ArrayList} of {@link Moon} objects.
      * Catches if a CSV is ill-formatted
      * @param lines {@link ArrayList} of Strings
-     * @return {@link ArrayList} of Moon Objects
+     * @return {@link ArrayList} of {@link Moon} Objects
      */
     public static ArrayList<Moon> createObjects(ArrayList<String> lines) {
         ArrayList<Moon> returnArrayList = new ArrayList<>();
@@ -106,7 +112,7 @@ public class MoonStudy {
                     throw new IllegalStateException();
                 }
             }
-            catch (NumberFormatException | IllegalStateException e) {
+            catch (Exception e) {
                 radius = 0.0;
             }
 
@@ -116,7 +122,7 @@ public class MoonStudy {
                     throw new IllegalStateException();
                 }
             }
-            catch (NumberFormatException | IllegalStateException e) {
+            catch (Exception e) {
                 density = 0.0;
             }
 
@@ -126,7 +132,7 @@ public class MoonStudy {
                     throw new IllegalStateException();
                 }
             }
-            catch (NumberFormatException | IllegalStateException e) {
+            catch (Exception e) {
                 distance = 0.0;
             }
             returnArrayList.add(new Moon(name,radius,density,distance));
@@ -206,8 +212,8 @@ public class MoonStudy {
      * @return the {@link Moon} that is the closest to mean value for the given attribute
      */
     public static Moon findMeanMoon(ArrayList<Moon> moons, MoonAttributes attribute, double meanValue) {
-        int idx = 0;
-        double dist = 0;
+        int idx;
+        double dist;
         switch (attribute) {
             case RADIUS:
                 idx = 0;
@@ -311,8 +317,8 @@ public class MoonStudy {
      */
     public static void outputToFile(String outputMessage, Moon moon, PrintWriter out) {
         //to print one Moon object
-        out.println(outputMessage + moon.toString());
-        out.println();
+        out.print(outputMessage + moon.toString());
+        out.println("\n");
     }
 
     /**
