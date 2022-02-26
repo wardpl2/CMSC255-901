@@ -20,8 +20,8 @@ public class SimpleServer {
             ObjectOutputStream oos2 = new ObjectOutputStream(s2.getOutputStream());
             ArrayList<String[]> al1 = (ArrayList<String[]>) ois1.readObject(); //create the ArrayList of String arrays from client1
             ArrayList<String[]> al2 = (ArrayList<String[]>) ois2.readObject(); //create the ArrayList of String arrays from client2
-            oos1.writeObject(al2);
-            oos2.writeObject(al1);
+            oos1.writeObject(al2); //send client2's ArrayList to client1
+            oos2.writeObject(al1); //send client1's ArrayList to client2
             //print client1 ArrayList
             for (String[] S : al1) {
                 System.out.println(Arrays.toString(S));
@@ -31,6 +31,9 @@ public class SimpleServer {
             for (String[] S : al2) {
                 System.out.println(Arrays.toString(S));
             }
+//            while (!s1.isClosed() && !s2.isClosed()) {
+//                readCoords();
+//            }
             //close everything
             ois1.close();
             ois2.close();
@@ -43,4 +46,9 @@ public class SimpleServer {
             System.out.println(e);
         }
     }
+
+//    private static String[] readCoords() {
+//        //
+//        return new String[0];
+//    }
 }

@@ -11,10 +11,35 @@ public class CookieClicker {
 
     JLabel counterLabel, perSecLabel;
     JButton button1, button2, button3, button4, cursorUpgradeButton, grandpaUpgradeButton, farmUpgradeButton, factoryUpgradeButton;
-    int cookieCounter, timerSpeed, cursorNumber, cursorPrice, grandpaNumber, grandpaPrice, farmNumber, farmPrice, factoryNumber, factoryPrice, cursorUpgradePrice, grandpaUpgradePrice, farmUpgradePrice, factoryUpgradePrice;
-    double perSecond;
-    boolean timerOn, grandpaUnlocked, farmUnlocked, factoryUnlocked, cursorUpgradeUnlocked, cursorUpgradeActive, grandpaUpgradeUnlocked, grandpaUpgradeActive, farmUpgradeUnlocked, farmUpgradeActive, factoryUpgradeUnlocked, factoryUpgradeActive;
-    Font font1, font2;
+    int cookieCounter = 0,
+            timerSpeed,
+            cursorNumber = 0,
+            cursorPrice = 20,
+            grandpaNumber = 0,
+            grandpaPrice = 100,
+            farmNumber = 0,
+            farmPrice = 1000,
+            factoryNumber = 0,
+            factoryPrice = 10000,
+            cursorUpgradePrice = 250,
+            grandpaUpgradePrice = 2500,
+            farmUpgradePrice = 7500,
+            factoryUpgradePrice = 50000;
+    double perSecond = 0;
+    boolean timerOn = false,
+            grandpaUnlocked = false,
+            farmUnlocked = false,
+            factoryUnlocked = false,
+            cursorUpgradeUnlocked,
+            cursorUpgradeActive = false,
+            grandpaUpgradeUnlocked,
+            grandpaUpgradeActive = false,
+            farmUpgradeUnlocked,
+            farmUpgradeActive = false,
+            factoryUpgradeUnlocked,
+            factoryUpgradeActive = false;
+    Font font1 = new Font("Comic Sans MS", Font.PLAIN, 32),
+            font2 = new Font("Comic Sans MS", Font.PLAIN, 15);
     CookieHandler cHandler = new CookieHandler();
     Timer timer;
     JTextArea messageText;
@@ -34,38 +59,7 @@ public class CookieClicker {
     }
 
     public CookieClicker() {
-
-        timerOn = false;
-        perSecond = 0;
-        cookieCounter = 0;
-        cursorNumber = 0;
-        cursorPrice = 20;
-        grandpaNumber = 0;
-        grandpaPrice = 100;
-        grandpaUnlocked = false;
-        farmNumber = 0;
-        farmPrice = 1000;
-        farmUnlocked = false;
-        factoryNumber = 0;
-        factoryPrice = 10000;
-        factoryUnlocked = false;
-        cursorUpgradePrice = 250;
-        cursorUpgradeActive = false;
-        grandpaUpgradePrice = 2500;
-        grandpaUpgradeActive = false;
-        farmUpgradePrice = 7500;
-        farmUpgradeActive = false;
-        factoryUpgradePrice = 50000;
-        factoryUpgradeActive = false;
-
-        createFont();
         createUI();
-    }
-    public void createFont() {
-
-        font1 = new Font("Comic Sans MS", Font.PLAIN, 32);
-        font2 = new Font("Comic Sans MS", Font.PLAIN, 15);
-
     }
     public void createUI() {
 
@@ -414,6 +408,9 @@ public class CookieClicker {
                     else {
                         messageText.setText("You need more cookies!");
                     }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + action);
             }
         }
     }

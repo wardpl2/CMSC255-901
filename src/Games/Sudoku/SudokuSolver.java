@@ -3,6 +3,10 @@ package Games.Sudoku;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * Asks the user to input a sudoku board to be solved and then the program solves it
+ * @author Preston Ward
+ */
 public class SudokuSolver {
     public static void main(String[] args) {
         int[][] board = fillBoardToSolve();
@@ -18,34 +22,7 @@ public class SudokuSolver {
         for (int[] i : board) {//print the board after being solved
             System.out.println(Arrays.toString(i));
         }
-//        new SudokuSolver();
     }
-
-//    public SudokuSolver() {
-//        createUI();
-//    }
-
-//    private void createUI() {
-//        JFrame window = new JFrame();
-//        window.setSize(1000, 500);
-//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        window.getContentPane().setBackground(new Color(214, 219, 222));
-//        window.setLayout(null);
-//
-//        JPanel coordsPanel = new JPanel();
-//        coordsPanel.setBounds(100,100,200,100);
-//        coordsPanel.setBackground(Color.black);
-//        coordsPanel.setLayout(new GridLayout(1,2));
-//        window.add(coordsPanel);
-//
-//        JLabel xCoordLabel = new JLabel("X: " /*xcoord*/);
-//        xCoordLabel.setForeground(Color.white);
-//        xCoordLabel.setFont(new Font("Helvetica", Font.PLAIN, 15));
-//        coordsPanel.add(xCoordLabel);
-//
-//        window.setVisible(true);
-//
-//    }
 
     /**
      * Fills a sudoku board by asking the user to input the numbers on the board using 0s for empty spaces

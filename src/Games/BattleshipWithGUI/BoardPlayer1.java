@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BoardPlayer1 extends JFrame implements ActionListener{
     final Color MISS = new Color(77, 147, 218, 255);
@@ -25,14 +27,23 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
     static ArrayList<String[]> p2SolutionGrid = new ArrayList<>();
     static String[][] shipCoords = new String[10][10];
     Timer timer;
-    int numShipsPlaced;
+    int numShipsPlaced = 0;
+    int cLeft = 5, bLeft = 4, dLeft = 3, sLeft = 3, pLeft = 2;
+    Socket s = new Socket("localhost",1234);
+    ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+    ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 
     public static void main(String[] args) {
-        new BoardPlayer1();
+        try {
+            new BoardPlayer1();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public BoardPlayer1() {
+    public BoardPlayer1() throws IOException {
         createUI();
     }
 
@@ -82,20 +93,25 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
             System.out.println("timer went off");
             if (numShipsPlaced == 5) {
                 try {
-                    Socket s = new Socket("localhost",1234);
-                    ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-                    ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                     oos.writeObject(p1SolutionGrid);
                     p2SolutionGrid = (ArrayList<String[]>) ois.readObject();
+
+                    timer.stop();
+                    for (String[] S : p2SolutionGrid) {
+                        System.out.println(Arrays.toString(S));
+                    }
+                    setSolutionGrid(playerTwoGridPanel,p2SolutionGrid);
+                    for (int i = 48; i <= 471; i += 47) {
+                        for (int j = 47; j <= 452; j += 45) {
+                            playerOneGridPanel.getComponentAt(i,j).setBackground(OCEAN);
+                        }
+                    }
+
+
+
                     oos.close();
                     ois.close();
                     s.close();
-                    timer.stop();
-                    p2SolutionGrid.forEach(System.out::println);
-//                    for (String[] S : p2SolutionGrid) {
-//                        System.out.println(Arrays.toString(S));
-//                    }
-                    setSolutionGrid(playerTwoGridPanel,p2SolutionGrid);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -159,7 +175,7 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
             button.addActionListener(this);
             button.setActionCommand("OCEAN");
             panel.add(button);
-            shipCoords[row][i] = "OCEAN";
+            shipCoords[i][row] = "OCEAN";
         }
     }
 
@@ -437,8 +453,47 @@ public class BoardPlayer1 extends JFrame implements ActionListener{
                             numShipsPlaced++;
                         }
                     }
-                } else {
+                }
+                else if (currentShip == ' ' && numShipsPlaced < 5) {
                     JOptionPane.showMessageDialog(null,"Select a ship first","Warning",JOptionPane.WARNING_MESSAGE);
+                } else {
+                    for (String[] S : p2SolutionGrid) {
+                        if (x == Integer.parseInt(S[1]) && y == Integer.parseInt(S[2])) {
+                            playerOneGridPanel.getComponentAt(x,y).setBackground(HIT);
+                            if (S[0].equals(SHIP_NAMES[0])) {
+                                cLeft--;
+                                if (cLeft == 0) {
+                                    System.out.println("You sunk your opponent's Carrier");
+                                }
+                            }
+                            else if (S[0].equals(SHIP_NAMES[1])) {
+                                bLeft--;
+                                if (bLeft == 0) {
+                                    System.out.println("You sunk your opponent's Battleship");
+                                }
+                            }
+                            else if (S[0].equals(SHIP_NAMES[2])) {
+                                dLeft--;
+                                if (dLeft == 0) {
+                                    System.out.println("You sunk your opponent's Destroyer");
+                                }
+                            }
+                            else if (S[0].equals(SHIP_NAMES[3])) {
+                                sLeft--;
+                                if (sLeft == 0) {
+                                    System.out.println("You sunk your opponent's Submarine");
+                                }
+                            }
+                            else if (S[0].equals(SHIP_NAMES[4])) {
+                                pLeft--;
+                                if (pLeft == 0) {
+                                    System.out.println("You sunk your opponent's Patrol Boat");
+                                }
+                            }
+                        } else {
+                            playerOneGridPanel.getComponentAt(x,y).setBackground(MISS);
+                        }
+                    }
                 }
             }
             case "SHIP" -> {

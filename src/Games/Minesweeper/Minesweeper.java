@@ -2,7 +2,7 @@ package Games.Minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
-//            subclass          superclass
+
 public class Minesweeper extends JFrame {
 
     public Minesweeper() {
