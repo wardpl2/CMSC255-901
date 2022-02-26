@@ -12,11 +12,14 @@ import java.util.ArrayList;
  * CMSC 255-901
  **************************/
 public class Development {
+    /**
+     * Instance Variables
+     */
     private String name;
     private String location;
     private int yearEst;
     private int numLots;
-    private ArrayList<House> houses;
+    private final ArrayList<House> houses;
 
     /**
      * Parameterized Constructor
@@ -94,6 +97,7 @@ public class Development {
     }
 
     /**
+     * toString method specifically for {@link Development}
      * @return String formatted with all the details of a Development object which includes all the details of a House object
      */
     @Override

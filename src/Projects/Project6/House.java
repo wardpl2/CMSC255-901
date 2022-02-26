@@ -10,6 +10,9 @@ package Projects.Project6;
  * CMSC 255-901
  **************************/
 public class House {
+    /**
+     * Instance Variables
+     */
     private String owner;
     private int lotNumber;
     private double squareFootage;
@@ -86,6 +89,7 @@ public class House {
     }
 
     /**
+     * toString specifically for {@link House}
      * @return String formatted with all the details of a House object
      */
     @Override
